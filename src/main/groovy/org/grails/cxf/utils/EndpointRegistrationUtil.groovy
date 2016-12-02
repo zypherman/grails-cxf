@@ -48,14 +48,15 @@ class EndpointRegistrationUtil {
         }
     }
 
-    private static void setServiceAndPortName(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation){
+    private static void setServiceAndPortName(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation) {
         if (annotation != null) {
             addServiceName(annotation, implementor, endpoint)
             addPortName(annotation, implementor, endpoint)
         }
     }
 
-    private static void addConfiguredProperties(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation, ApplicationContext context) {
+    private
+    static void addConfiguredProperties(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation, ApplicationContext context) {
         assert implementor != null
         if (annotation != null) {
             addSoap12(annotation, endpoint)
@@ -85,7 +86,7 @@ class EndpointRegistrationUtil {
     private static void addServiceName(GrailsCxfEndpoint annotation, Object implementor, EndpointImpl endpoint) {
         if (annotation?.name()) {
             endpoint.serviceName =
-                    new QName(getNamespaceURI(implementor),
+                    new QName(getNamespaceURI(implementor, annotation),
                             annotation.name(),
                             XMLConstants.DEFAULT_NS_PREFIX)
         }
@@ -94,14 +95,19 @@ class EndpointRegistrationUtil {
     private static void addPortName(GrailsCxfEndpoint annotation, Object implementor, EndpointImpl endpoint) {
         if (annotation?.port()) {
             endpoint.endpointName =
-                    new QName(getNamespaceURI(implementor),
+                    new QName(getNamespaceURI(implementor, annotation),
                             annotation.port(),
                             XMLConstants.DEFAULT_NS_PREFIX)
         }
     }
 
-    private static String getNamespaceURI(implementor) {
-        'http://' + implementor.getClass().package.name.split('\\.').reverse().join(".")
+    private static String getNamespaceURI(implementor, GrailsCxfEndpoint annotation) {
+        // Check if there is a namespace uri defined in the annotations
+        if (annotation?.namespaceURI()) {
+            return annotation?.namespaceURI()
+        } else {
+            'http://' + implementor.getClass().package.name.split('\\.').reverse().join(".")
+        }
     }
 
     private static void addWsdl(GrailsCxfEndpoint annotation, EndpointImpl endpoint) {

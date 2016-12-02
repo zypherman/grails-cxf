@@ -39,6 +39,15 @@ class EndpointRegistrationUtilSpec extends Specification {
         1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint.class) >> ['fooEndpoint': new FooEndpoint()]
         1 * applicationContext.getBean(Bus.DEFAULT_BUS_ID) >> bus
     }
+
+    def "test endpoints is wired with added namespaceURI property"() {
+        when:
+        EndpointRegistrationUtil.wireEndpoints(applicationContext)
+
+        then:
+        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint.class) >> ['fooSystem': new FooSystem()]
+        1 * applicationContext.getBean(Bus.DEFAULT_BUS_ID) >> bus
+    }
 }
 
 @GrailsCxfEndpoint
@@ -49,3 +58,6 @@ class FooClass {}
 
 @GrailsCxfEndpoint(address = 'foo')
 class FooEndpoint {}
+
+@GrailsCxfEndpoint(name = 'FooSystem', namespaceURI = 'http://Foo.System.com', address = 'fooSystem')
+class FooSystem {}

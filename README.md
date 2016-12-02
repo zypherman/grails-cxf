@@ -201,6 +201,7 @@ When using the annotation, the property values will only be used if the correspo
 @interface GrailsCxfEndpoint {
     String address() default ''
     String name() default ''
+    String namespaceURI() default ''
     EndpointType expose() default EndpointType.JAX_WS
     boolean soap12() default false
     String wsdl() default ''
@@ -254,6 +255,17 @@ The `name` property will tell the plugin how you wish to name the service.  This
 
 ```groovy
 @GrailsCxfEndpoint(name='Car')
+class CarService {
+    ...
+}
+```
+
+**NAMESPACE URI**
+
+The `namespaceURI` property will tell the plugin how you wish to name the namespace URI of the service.  This will change the wsdl target namespace property from the default for the example below from `http://demo.gpc.com` to `http://Car.Service.com` like this `<wsdl:definitions name="Car" targetNamespace="http://Car.Service.com">`
+
+```groovy
+@GrailsCxfEndpoint(name='Car', namespaceURI='http://Car.Service.com')
 class CarService {
     ...
 }

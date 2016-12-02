@@ -14,6 +14,8 @@ import java.lang.annotation.Target
     String address() default ''
     //this is the serviceName (localpart) attribute
     String name() default ''
+    //this is the targetNamespace (localpart) attribute
+    String namespaceURI() default ''
     //this is the servicePort (localpart) attribute
     String port() default ''
     EndpointType expose() default EndpointType.JAX_WS
